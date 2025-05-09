@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Animation with User Preferences</title>
+    <style>
+        /* Button and image base styles */
+        button, img {
+            cursor: pointer;
+            transition: transform 0.5s ease;
+        }
+
+        /* Animation class */
+        .animate-scale {
+            animation: scaleUpDown 0.6s ease forwards;
+        }
+
+        /* Keyframes for scale animation */
+        @keyframes scaleUpDown {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Style for dark mode to illustrate user preference */
+        body.dark-mode {
+            background-color: #222;
+            color: #eee;
+        }
+    </style>
+</head>
+<body>
+
+<button id="animateBtn">Click Me!</button>
+<br /><br />
+<img id="animateImg" src="https://via.placeholder.com/150" alt="Sample Image" width="150" />
+<br /><br />
+<button id="toggleThemeBtn">Toggle Dark Mode</button>
+
+<script>
+    function triggerAnimation(element, animationClass) {
+        element.classList.add(animationClass);
+        element.addEventListener('animationend', () => {
+            element.classList.remove(animationClass);
+        }, { once: true });
+    }
+
+    function savePreference(key, value) {
+        localStorage.setItem(key, value);
+    }
+
+
+    function getPreference(key, defaultValue = null) {
+        return localStorage.getItem(key) || defaultValue;
+    }
+
+
+    function applyTheme() {
+        const theme = getPreference('theme', 'light');
+        if (theme === 'dark') {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    }
+
+
+    applyTheme();
+
+
+    const animateBtn = document.getElementById('animateBtn');
+    animateBtn.addEventListener('click', () => {
+        triggerAnimation(animateBtn, 'animate-scale');
+    });
+
+
+    const animateImg = document.getElementById('animateImg');
+    animateImg.addEventListener('click', () => {
+        triggerAnimation(animateImg, 'animate-scale');
+    });
+
+
+    const toggleThemeBtn = document.getElementById('toggleThemeBtn');
+    toggleThemeBtn.addEventListener('click', () => {
+        const isDarkMode = document.body.classList.toggle('dark-mode');
+        savePreference('theme', isDarkMode ? 'dark' : 'light');
+    });
+</script>
+
+</body>
+</html>
